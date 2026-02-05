@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #FFD93D;
+  --color-secondary: #6BCB77;
+  --color-accent: #4D96FF;
+  --color-soft-pink: #FF6B6B;
+  --color-bg-main: #F9F9F9;
+
+  --font-display: "Fredoka", sans-serif;
+  --font-body: "Lexend", sans-serif;
+
+  --radius-bento: 2rem;
+}
