@@ -33,6 +33,9 @@ export default function QuizPage() {
 
     function answerQuestion(selectedAnswer: any) {
         setSelectedAnswer(selectedAnswer)
+        if (selectedAnswer === currentQuestion.correctAnswer) {
+            setScore(prev => prev + 1)
+        }
         setAnswers(prev => [
             ...prev,
             {
@@ -42,20 +45,19 @@ export default function QuizPage() {
             }
         ])
 
-        if (selectedAnswer === currentQuestion.correctAnswer) {
-            setScore(prev => prev + 1)
-        }
-
         if (questionIndex < question.length - 1) {
             setQuestionIndex(prev => prev + 1)
         } else {
-            finishQuiz()
+            finishQuiz(selectedAnswer)
         }
     }
 
-    function finishQuiz() {
+    function finishQuiz(selectedAnswer: any) {
+        const isCorrect = selectedAnswer === currentQuestion.correctAnswer
+        const finalScore = isCorrect ? score + 1 : score
+
         navigate('/result', {
-            state: { score, total: question.length, answers }
+            state: { finalScore, total: question.length, answers }
         })
     }
     return (

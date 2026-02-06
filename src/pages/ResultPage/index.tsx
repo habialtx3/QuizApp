@@ -1,9 +1,14 @@
 import React from "react"
+import { useLocation } from "react-router-dom"
 
 export default function ResultPage() {
+
+    const location = useLocation()
+    console.log(location.state?.finalScore);
+
     return (
         <>
-            
+
             {/* Main */}
             <main className="flex-1 flex items-center justify-center px-4 py-10 relative">
                 <div className="max-w-[850px] w-full bento-card rounded-bento p-8 md:p-14 relative overflow-hidden">
