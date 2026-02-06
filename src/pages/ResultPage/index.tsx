@@ -74,17 +74,17 @@ export default function ResultPage() {
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
-                                <Stat label="Total Questions" value="10" icon="fact_check" />
-                                <Stat label="Answered" value="10" icon="edit_square" />
+                                <Stat label="Total Questions" value={`${location.state.total}`} icon="fact_check" />
+                                <Stat label="Answered" value={`${location.state.total}`} icon="edit_square" />
                                 <Stat
                                     label="Correct"
-                                    value="8"
+                                    value={location.state.finalScore}
                                     icon="check_circle"
                                     accent="secondary"
                                 />
                                 <Stat
                                     label="Incorrect"
-                                    value="2"
+                                    value={`${location.state.total - location.state.finalScore}`}
                                     icon="cancel"
                                     accent="soft-pink"
                                 />
