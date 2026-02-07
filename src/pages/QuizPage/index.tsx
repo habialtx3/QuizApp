@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Navigate, useLocation, useNavigate } from "react-router-dom"
 
 export default function QuizPage() {
@@ -7,30 +7,58 @@ export default function QuizPage() {
     const navigate = useNavigate()
 
     const [questionIndex, setQuestionIndex] = useState(0)
+    const [questions, setQuestions] = useState([])
     const [selectedAnswer, setSelectedAnswer] = useState(null)
     const [answers, setAnswers] = useState([])
     const [score, setScore] = useState(0)
 
+
+
+    // const question = [
+    //     {
+    //         id: 1,
+    //         question: "Apa ibu kota Indonesia?",
+    //         options: ["Jakarta", "Bandung", "Surabaya", "Medan"],
+    //         correctAnswer: 0
+    //     },
+    //     {
+    //         id: 2,
+    //         question: "2 + 2 = ?",
+    //         options: ["3", "4", "5", "6"],
+    //         correctAnswer: 1
+    //     }]
+
+    useEffect(() => {
+        fetch('https://opentdb.com/api.php?amount=2&category=21&difficulty=easy')
+            .then(res => res.json())
+            .then(data => {
+                setQuestions(formatQuestion(data.results))
+            })
+    }, [])
+    
     if (!name) {
         return <Navigate to={'/'} replace />
     }
 
-    const question = [
-        {
-            id: 1,
-            question: "Apa ibu kota Indonesia?",
-            options: ["Jakarta", "Bandung", "Surabaya", "Medan"],
-            correctAnswer: 0
-        },
-        {
-            id: 2,
-            question: "2 + 2 = ?",
-            options: ["3", "4", "5", "6"],
-            correctAnswer: 1
-        }]
+    if (!questions.length) {
+        return <div className="p-10 text-center">Loading Question ...</div>
+    }
+    const currentQuestion = questions[questionIndex]
 
-    const currentQuestion = question[questionIndex]
+    function formatQuestion(apiResponse) {
+        return apiResponse.map((q, index) => {
+            const options = [...q.incorrect_answers, q.correct_answer]
 
+            const shuffleOptions = options.sort(() => Math.random() - 0.5)
+
+            return {
+                id: index + 1,
+                question: decodeHtml(q.question),
+                options: shuffleOptions.map((opt) => decodeHtml(opt)),
+                correctAnswer: decodeHtml(q.correct_answer)
+            }
+        })
+    }
     function answerQuestion(selectedAnswer: any) {
         setSelectedAnswer(selectedAnswer)
         if (selectedAnswer === currentQuestion.correctAnswer) {
@@ -45,20 +73,23 @@ export default function QuizPage() {
             }
         ])
 
-        if (questionIndex < question.length - 1) {
+        if (questionIndex < questions.length - 1) {
             setQuestionIndex(prev => prev + 1)
         } else {
-            finishQuiz(selectedAnswer)
+            finishQuiz()
         }
     }
 
-    function finishQuiz(selectedAnswer: any) {
-        const isCorrect = selectedAnswer === currentQuestion.correctAnswer
-        const finalScore = isCorrect ? score + 1 : score
-
+    function finishQuiz() {
         navigate('/result', {
-            state: { finalScore, total: question.length, answers }
+            state: { finalScore: score, total: questions.length, answers }
         })
+    }
+
+    function decodeHtml(text: any) {
+        const txt = document.createElement("textarea")
+        txt.innerHTML = text
+        return txt.value
     }
     return (
         <div className="relative min-h-screen w-full overflow-x-hidden">
@@ -127,10 +158,10 @@ export default function QuizPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
                         {currentQuestion.options.map((option, i) => (
                             <Answer
-                                selected={selectedAnswer === i}
+                                selected={selectedAnswer === option}
                                 key={i}
                                 label={option}
-                                onClick={() => answerQuestion(i)}
+                                onClick={() => answerQuestion(option)}
                                 img="https://lh3.googleusercontent.com/aida-public/AB6AXuBPD0FWvq3HtyrQYd9XlDJvyRhUTRiHeyx5iSZf-6tepZ9XFgJa6ImlGKzVgR5rKIkUYc33tpJ0VxEscQ405Ga6ZK57Go-hRh6fSiJNPWNaV9MOAJqhrjvNr_qVKJIuDh1FiOpFjyXjFSrWXIwETgxJrXj32SFWNHgFKdnXpW_qu0Ui86U5aQjePZmtGKULDjWE4OsxiSONBsBIS_DfqfWHzzuFpAu3rBTJlsorwn0plrtHWONkQFMO2ERM9zcslh3MosnliGUe3y3Y"
 
                             />
