@@ -65,6 +65,10 @@ export default function QuizPage() {
     }
     function answerQuestion(selectedAnswer: any) {
         setSelectedAnswer(selectedAnswer)
+
+        const isCorrect = selectedAnswer === currentQuestion.correctAnswer
+        const finalScore = isCorrect ? score + 1 : score
+
         if (selectedAnswer === currentQuestion.correctAnswer) {
             setScore(prev => prev + 1)
         }
@@ -80,11 +84,26 @@ export default function QuizPage() {
         if (questionIndex < questions.length - 1) {
             setQuestionIndex(prev => prev + 1)
         } else {
-            finishQuiz()
+            finishQuiz(finalScore)
         }
     }
 
-    function finishQuiz() {
+    function finishQuiz(finalScore) {
+        const resultData = {
+            name,
+            finalScore: score,
+            total: questions.length,
+            date: new Date().toISOString()
+
+        }
+
+        const leaderboard = JSON.parse(localStorage.getItem("quizResults")) || []
+
+        localStorage.setItem(
+            "quizResults",
+            JSON.stringify([...leaderboard, resultData])
+        )
+
         navigate('/result', {
             state: { finalScore: score, total: questions.length, answers, name }
         })
