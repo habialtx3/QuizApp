@@ -29,13 +29,17 @@ export default function QuizPage() {
     //     }]
 
     useEffect(() => {
-        fetch('https://opentdb.com/api.php?amount=2&category=31&difficulty=easy')
+        fetch('https://opentdb.com/api.php?amount=10&category=19&difficulty=easy')
             .then(res => res.json())
             .then(data => {
+                if (!data.results || data.results.length === 0) {
+                    console.log("No Question Returned", data);
+                    return
+                }
                 setQuestions(formatQuestion(data.results))
             })
     }, [])
-    
+
     if (!name) {
         return <Navigate to={'/'} replace />
     }
@@ -82,7 +86,7 @@ export default function QuizPage() {
 
     function finishQuiz() {
         navigate('/result', {
-            state: { finalScore: score, total: questions.length, answers }
+            state: { finalScore: score, total: questions.length, answers, name }
         })
     }
 

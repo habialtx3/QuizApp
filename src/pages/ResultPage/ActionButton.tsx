@@ -1,0 +1,31 @@
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+
+export default function ActionButton(name: String) {
+    const navigate = useNavigate()
+
+    function restartQuiz() {
+        navigate('/quiz', {
+            state: { name }
+        })
+    }
+    return (
+        <div className="flex flex-col sm:flex-row gap-6">
+            <button
+                onClick={restartQuiz}
+                className="flex-1 h-16 bg-accent text-white rounded-3xl text-lg font-black font-display tracking-wide shadow-xl shadow-accent/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+                <span className="material-symbols-outlined">
+                    restart_alt
+                </span>
+                Restart Quiz
+            </button>
+
+            <button className="flex-1 h-16 bg-white border-2 border-slate-100 rounded-3xl text-lg font-bold text-slate-600 hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                <span className="material-symbols-outlined">
+                    grid_view
+                </span>
+                Dashboard
+            </button>
+        </div>
+    )
+}
