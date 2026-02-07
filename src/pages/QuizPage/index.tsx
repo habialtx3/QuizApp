@@ -29,7 +29,7 @@ export default function QuizPage() {
     //     }]
 
     useEffect(() => {
-        fetch('https://opentdb.com/api.php?amount=2&category=21&difficulty=easy')
+        fetch('https://opentdb.com/api.php?amount=2&category=31&difficulty=easy')
             .then(res => res.json())
             .then(data => {
                 setQuestions(formatQuestion(data.results))

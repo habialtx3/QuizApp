@@ -4,6 +4,12 @@ import { useLocation } from "react-router-dom"
 export default function ResultPage() {
 
     const location = useLocation()
+    const finalScore = location.state.finalScore
+    const total = location.state.total
+    const incorrect = total - finalScore
+
+
+
     console.log(location.state?.finalScore);
 
     return (
@@ -47,7 +53,7 @@ export default function ResultPage() {
                             <div className="w-56 h-56 rounded-full bg-accent/10 flex items-center justify-center">
                                 <div className="text-center">
                                     <span className="block text-slate-800 text-6xl font-black font-display">
-                                        8/10
+                                        {`${finalScore}/${total}`}
                                     </span>
                                     <span className="text-slate-400 text-sm font-bold uppercase tracking-widest">
                                         Score
@@ -69,22 +75,22 @@ export default function ResultPage() {
                                     Your Performance
                                 </h3>
                                 <span className="text-secondary font-black text-2xl">
-                                    80%
+                                    {finalScore / total * 100} %
                                 </span>
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
-                                <Stat label="Total Questions" value={`${location.state.total}`} icon="fact_check" />
-                                <Stat label="Answered" value={`${location.state.total}`} icon="edit_square" />
+                                <Stat label="Total Questions" value={total} icon="fact_check" />
+                                <Stat label="Answered" value={total} icon="edit_square" />
                                 <Stat
                                     label="Correct"
-                                    value={location.state.finalScore}
+                                    value={finalScore}
                                     icon="check_circle"
                                     accent="secondary"
                                 />
                                 <Stat
                                     label="Incorrect"
-                                    value={`${location.state.total - location.state.finalScore}`}
+                                    value={incorrect}
                                     icon="cancel"
                                     accent="soft-pink"
                                 />
