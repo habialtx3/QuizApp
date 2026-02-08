@@ -13,6 +13,7 @@ export default function QuizPage() {
     const [selectedAnswer, setSelectedAnswer] = useState(null)
     const [answers, setAnswers] = useState([])
     const [score, setScore] = useState(0)
+    const [timeLeft, setTimeLeft] = useState(60)
 
 
 
@@ -46,6 +47,23 @@ export default function QuizPage() {
         loadQuiz()
     }, [])
 
+    useEffect(() => {
+        setTimeLeft(60)
+    }, [questionIndex])
+
+    useEffect(() => {
+        if (timeLeft <= 0) {
+            answerQuestion(null)
+            return
+        }
+
+        const timer = setInterval(() => {
+            setTimeLeft(prev => prev - 1)
+        }, 1000);
+
+        return () => clearInterval(timer)
+    }, [timeLeft])
+
     if (!name) {
         return <Navigate to={'/'} replace />
     }
@@ -56,10 +74,9 @@ export default function QuizPage() {
     const currentQuestion = questions[questionIndex]
 
     function answerQuestion(selectedAnswer: any) {
-        setSelectedAnswer(selectedAnswer)
-
         const isCorrect = selectedAnswer === currentQuestion.correctAnswer
         const finalScore = isCorrect ? score + 1 : score
+
         if (isCorrect) {
             setScore(finalScore)
         }
@@ -142,7 +159,7 @@ export default function QuizPage() {
                         <div className="flex items-center gap-4 bg-white px-8 py-4 rounded-3xl shadow-sm border border-slate-100">
                             <div className="size-14 rounded-full bg-soft-pink/20 flex items-center justify-center border-4 border-white">
                                 <span className="text-soft-pink font-display font-bold text-2xl">
-                                    45
+                                    {timeLeft}
                                 </span>
                             </div>
                             <div>
