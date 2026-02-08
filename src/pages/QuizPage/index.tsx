@@ -1,13 +1,107 @@
-import React from "react"
-import { Navigate, useLocation } from "react-router-dom"
+import React, { useEffect, useState } from "react"
+import { Navigate, useLocation, useNavigate } from "react-router-dom"
+import { FetchQuizQuestion } from "../../services/quizService"
+import { formatQuestion } from "../../utils/formatQuestion"
 
 export default function QuizPage() {
     const location = useLocation()
     const name = location.state?.name
+    const navigate = useNavigate()
 
-    if(!name){
-        <Navigate to={'/'} replace/>
+    const [questionIndex, setQuestionIndex] = useState(0)
+    const [questions, setQuestions] = useState([])
+    const [selectedAnswer, setSelectedAnswer] = useState(null)
+    const [answers, setAnswers] = useState([])
+    const [score, setScore] = useState(0)
+
+
+
+    // const question = [
+    //     {
+    //         id: 1,
+    //         question: "Apa ibu kota Indonesia?",
+    //         options: ["Jakarta", "Bandung", "Surabaya", "Medan"],
+    //         correctAnswer: 0
+    //     },
+    //     {
+    //         id: 2,
+    //         question: "2 + 2 = ?",
+    //         options: ["3", "4", "5", "6"],
+    //         correctAnswer: 1
+    //     }]
+
+    useEffect(() => {
+        async function loadQuiz() {
+            try {
+                const amount = 10
+                const category = 19
+                const dificulty = 'easy'
+                const rawQuestion = await FetchQuizQuestion(amount, category, dificulty)
+                setQuestions(formatQuestion(rawQuestion))
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        loadQuiz()
+    }, [])
+
+    if (!name) {
+        return <Navigate to={'/'} replace />
     }
+
+    if (!questions.length) {
+        return <div className="p-10 text-center">Loading Question ...</div>
+    }
+    const currentQuestion = questions[questionIndex]
+
+    function answerQuestion(selectedAnswer: any) {
+        setSelectedAnswer(selectedAnswer)
+
+        const isCorrect = selectedAnswer === currentQuestion.correctAnswer
+        const finalScore = isCorrect ? score + 1 : score
+        if (isCorrect) {
+            setScore(finalScore)
+        }
+
+        setAnswers(prev => [
+            ...prev,
+            {
+                questionId: currentQuestion.id,
+                selected: selectedAnswer,
+                correct: currentQuestion.correctAnswer
+            }
+        ])
+
+        if (questionIndex < questions.length - 1) {
+            setQuestionIndex(prev => prev + 1)
+            setSelectedAnswer(null)
+        } else {
+            finishQuiz(finalScore)
+        }
+    }
+
+    function finishQuiz(finalScore) {
+        const resultData = {
+            name,
+            finalScore,
+            total: questions.length,
+            date: new Date().toISOString()
+
+        }
+
+        const leaderboard = JSON.parse(localStorage.getItem("quizResults")) || []
+
+        localStorage.setItem(
+            "quizResults",
+            JSON.stringify([...leaderboard, resultData])
+        )
+
+        navigate('/result', {
+            state: { finalScore, total: questions.length, answers, name }
+        })
+    }
+
 
     return (
         <div className="relative min-h-screen w-full overflow-x-hidden">
@@ -23,9 +117,9 @@ export default function QuizPage() {
                                         {`${name}'s Journey`}
                                     </span>
                                     <p className="text-xl font-display font-bold text-slate-700">
-                                        Question 1{" "}
+                                        Question {questionIndex + 1}
                                         <span className="text-slate-300 font-medium">
-                                            / 10
+                                            / {questions.length}
                                         </span>
                                     </p>
                                 </div>
@@ -68,30 +162,23 @@ export default function QuizPage() {
                             Geography Challenge 🌍
                         </div>
                         <h1 className="text-slate-800 text-3xl md:text-5xl font-display font-bold leading-tight max-w-2xl mx-auto">
-                            What is the capital of France?
+                            {currentQuestion.question}
                         </h1>
                     </div>
 
                     {/* Answers */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
-                        <Answer
-                            selected
-                            label="Paris"
-                            img="https://lh3.googleusercontent.com/aida-public/AB6AXuBPD0FWvq3HtyrQYd9XlDJvyRhUTRiHeyx5iSZf-6tepZ9XFgJa6ImlGKzVgR5rKIkUYc33tpJ0VxEscQ405Ga6ZK57Go-hRh6fSiJNPWNaV9MOAJqhrjvNr_qVKJIuDh1FiOpFjyXjFSrWXIwETgxJrXj32SFWNHgFKdnXpW_qu0Ui86U5aQjePZmtGKULDjWE4OsxiSONBsBIS_DfqfWHzzuFpAu3rBTJlsorwn0plrtHWONkQFMO2ERM9zcslh3MosnliGUe3y3Y"
-                            badge="SELECTED"
-                        />
-                        <Answer label="London"
-                            label="Paris"
-                            img="https://lh3.googleusercontent.com/aida-public/AB6AXuBPD0FWvq3HtyrQYd9XlDJvyRhUTRiHeyx5iSZf-6tepZ9XFgJa6ImlGKzVgR5rKIkUYc33tpJ0VxEscQ405Ga6ZK57Go-hRh6fSiJNPWNaV9MOAJqhrjvNr_qVKJIuDh1FiOpFjyXjFSrWXIwETgxJrXj32SFWNHgFKdnXpW_qu0Ui86U5aQjePZmtGKULDjWE4OsxiSONBsBIS_DfqfWHzzuFpAu3rBTJlsorwn0plrtHWONkQFMO2ERM9zcslh3MosnliGUe3y3Y"
-                        />
-                        <Answer label="Berlin"
-                            label="Paris"
-                            img="https://lh3.googleusercontent.com/aida-public/AB6AXuBPD0FWvq3HtyrQYd9XlDJvyRhUTRiHeyx5iSZf-6tepZ9XFgJa6ImlGKzVgR5rKIkUYc33tpJ0VxEscQ405Ga6ZK57Go-hRh6fSiJNPWNaV9MOAJqhrjvNr_qVKJIuDh1FiOpFjyXjFSrWXIwETgxJrXj32SFWNHgFKdnXpW_qu0Ui86U5aQjePZmtGKULDjWE4OsxiSONBsBIS_DfqfWHzzuFpAu3rBTJlsorwn0plrtHWONkQFMO2ERM9zcslh3MosnliGUe3y3Y"
-                        />
-                        <Answer label="Rome"
-                            label="Paris"
-                            img="https://lh3.googleusercontent.com/aida-public/AB6AXuBPD0FWvq3HtyrQYd9XlDJvyRhUTRiHeyx5iSZf-6tepZ9XFgJa6ImlGKzVgR5rKIkUYc33tpJ0VxEscQ405Ga6ZK57Go-hRh6fSiJNPWNaV9MOAJqhrjvNr_qVKJIuDh1FiOpFjyXjFSrWXIwETgxJrXj32SFWNHgFKdnXpW_qu0Ui86U5aQjePZmtGKULDjWE4OsxiSONBsBIS_DfqfWHzzuFpAu3rBTJlsorwn0plrtHWONkQFMO2ERM9zcslh3MosnliGUe3y3Y"
-                        />
+                        {currentQuestion.options.map((option, i) => (
+                            <Answer
+                                selected={selectedAnswer === option}
+                                key={i}
+                                label={option}
+                                onClick={() => answerQuestion(option)}
+                                img="https://lh3.googleusercontent.com/aida-public/AB6AXuBPD0FWvq3HtyrQYd9XlDJvyRhUTRiHeyx5iSZf-6tepZ9XFgJa6ImlGKzVgR5rKIkUYc33tpJ0VxEscQ405Ga6ZK57Go-hRh6fSiJNPWNaV9MOAJqhrjvNr_qVKJIuDh1FiOpFjyXjFSrWXIwETgxJrXj32SFWNHgFKdnXpW_qu0Ui86U5aQjePZmtGKULDjWE4OsxiSONBsBIS_DfqfWHzzuFpAu3rBTJlsorwn0plrtHWONkQFMO2ERM9zcslh3MosnliGUe3y3Y"
+
+                            />
+                        ))}
+
                     </div>
 
                     {/* Navigation */}
@@ -131,7 +218,7 @@ export default function QuizPage() {
     )
 }
 
-function Answer({ label, img, selected, badge }) {
+function Answer({ label, img, selected, badge, onClick }) {
     return (
         <button
             className={`flex flex-col gap-4 p-5 rounded-3xl border-4 transition-all group
@@ -139,6 +226,7 @@ function Answer({ label, img, selected, badge }) {
                     ? "border-primary shadow-lg"
                     : "border-transparent hover:border-secondary/30 hover:-translate-y-1"
                 } bg-white`}
+            onClick={onClick}
         >
             <div
                 className="w-full aspect-video rounded-2xl bg-cover bg-center overflow-hidden"
