@@ -13,7 +13,7 @@ export default function QuizPage() {
     const [selectedAnswer, setSelectedAnswer] = useState(null)
     const [answers, setAnswers] = useState([])
     const [score, setScore] = useState(0)
-    const [timeLeft, setTimeLeft] = useState(60)
+    const [timeLeft, setTimeLeft] = useState(5)
 
 
 
@@ -48,12 +48,12 @@ export default function QuizPage() {
     }, [])
 
     useEffect(() => {
-        setTimeLeft(60)
+        setTimeLeft(5)
     }, [questionIndex])
 
     useEffect(() => {
         if (timeLeft <= 0) {
-            answerQuestion(null)
+            finishQuiz(score)
             return
         }
 
@@ -103,6 +103,7 @@ export default function QuizPage() {
             name,
             finalScore,
             total: questions.length,
+            answers,
             date: new Date().toISOString()
 
         }
