@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Navigate, useLocation, useNavigate } from "react-router-dom"
+import { FetchQuizQuestion } from "../../services/quizService"
+import { formatQuestion } from "../../utils/formatQuestion"
 
 export default function QuizPage() {
     const location = useLocation()
@@ -29,15 +31,19 @@ export default function QuizPage() {
     //     }]
 
     useEffect(() => {
-        fetch('https://opentdb.com/api.php?amount=10&category=19&difficulty=easy')
-            .then(res => res.json())
-            .then(data => {
-                if (!data.results || data.results.length === 0) {
-                    console.log("No Question Returned", data);
-                    return
-                }
-                setQuestions(formatQuestion(data.results))
-            })
+        async function loadQuiz() {
+            try {
+                const amount = 10
+                const category = 19
+                const dificulty = 'easy'
+                const rawQuestion = await FetchQuizQuestion(amount, category, dificulty)
+                setQuestions(formatQuestion(rawQuestion))
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        loadQuiz()
     }, [])
 
     if (!name) {
@@ -49,29 +55,15 @@ export default function QuizPage() {
     }
     const currentQuestion = questions[questionIndex]
 
-    function formatQuestion(apiResponse) {
-        return apiResponse.map((q, index) => {
-            const options = [...q.incorrect_answers, q.correct_answer]
-
-            const shuffleOptions = options.sort(() => Math.random() - 0.5)
-
-            return {
-                id: index + 1,
-                question: decodeHtml(q.question),
-                options: shuffleOptions.map((opt) => decodeHtml(opt)),
-                correctAnswer: decodeHtml(q.correct_answer)
-            }
-        })
-    }
     function answerQuestion(selectedAnswer: any) {
         setSelectedAnswer(selectedAnswer)
 
         const isCorrect = selectedAnswer === currentQuestion.correctAnswer
         const finalScore = isCorrect ? score + 1 : score
-
-        if (selectedAnswer === currentQuestion.correctAnswer) {
-            setScore(prev => prev + 1)
+        if (isCorrect) {
+            setScore(finalScore)
         }
+
         setAnswers(prev => [
             ...prev,
             {
@@ -83,6 +75,7 @@ export default function QuizPage() {
 
         if (questionIndex < questions.length - 1) {
             setQuestionIndex(prev => prev + 1)
+            setSelectedAnswer(null)
         } else {
             finishQuiz(finalScore)
         }
@@ -91,7 +84,7 @@ export default function QuizPage() {
     function finishQuiz(finalScore) {
         const resultData = {
             name,
-            finalScore: score,
+            finalScore,
             total: questions.length,
             date: new Date().toISOString()
 
@@ -105,15 +98,11 @@ export default function QuizPage() {
         )
 
         navigate('/result', {
-            state: { finalScore: score, total: questions.length, answers, name }
+            state: { finalScore, total: questions.length, answers, name }
         })
     }
 
-    function decodeHtml(text: any) {
-        const txt = document.createElement("textarea")
-        txt.innerHTML = text
-        return txt.value
-    }
+
     return (
         <div className="relative min-h-screen w-full overflow-x-hidden">
             {/* Main */}
@@ -128,9 +117,9 @@ export default function QuizPage() {
                                         {`${name}'s Journey`}
                                     </span>
                                     <p className="text-xl font-display font-bold text-slate-700">
-                                        Question 1{" "}
+                                        Question {questionIndex + 1}
                                         <span className="text-slate-300 font-medium">
-                                            / 10
+                                            / {questions.length}
                                         </span>
                                     </p>
                                 </div>
