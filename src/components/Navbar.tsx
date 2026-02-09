@@ -1,7 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function Navbar() {
+
+    const [highestResult, sethighestResult] = useState(null)
+
+    useEffect(() => {
+        const results = JSON.parse(localStorage.getItem("quizResults")) || []
+        const highest = results.reduce((max, curr) => curr.finalScore > max.finalScore ? curr : max,
+            { finalScore: 0 })
+        sethighestResult(highest)
+    }, [])
     return (
         <>
 
@@ -26,10 +35,10 @@ export default function Navbar() {
                 <div className="flex items-center gap-4">
                     <div className="hidden md:flex flex-col items-end">
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                            Highest Score
+                            Highest Score :
                         </span>
                         <span className="text-lg font-bold text-secondary">
-                            {localStorage.getItem()}
+                            {highestResult?.finalScore > 0 ? `${highestResult?.name} - ${highestResult?.finalScore}` : '-'}
                         </span>
                     </div>
                     <button className="size-11 rounded-2xl bg-slate-100 text-slate-600 hover:scale-105 active:scale-95 transition-all">
