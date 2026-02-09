@@ -5,15 +5,21 @@ import { formatQuestion } from "../../utils/formatQuestion"
 
 export default function QuizPage() {
     const location = useLocation()
-    const name = location.state?.name
+
     const navigate = useNavigate()
+    const Quiz_Local = "QUIZ-PROGRESS"
+    const savedProgress = localStorage.getItem(Quiz_Local)
+    const parsedProgress = savedProgress ? JSON.parse(savedProgress) : null
+    const name = location.state?.name || parsedProgress?.name
 
     const [questionIndex, setQuestionIndex] = useState(0)
     const [questions, setQuestions] = useState([])
     const [selectedAnswer, setSelectedAnswer] = useState(null)
     const [answers, setAnswers] = useState([])
     const [score, setScore] = useState(0)
-
+    const [start, setStart] = useState(false)
+    const [timeLeft, setTimeLeft] = useState(20)
+    const [finished, setFinished] = useState(false)
 
 
     // const question = [
@@ -29,8 +35,24 @@ export default function QuizPage() {
     //         options: ["3", "4", "5", "6"],
     //         correctAnswer: 1
     //     }]
+    useEffect(() => {
+        if (!start) return
+
+
+        if (timeLeft <= 0) {
+            finishQuiz(score)
+            return
+        }
+
+        const timer = setInterval(() => {
+            setTimeLeft(prev => prev - 1)
+        }, 1000);
+
+        return () => clearInterval(timer)
+    }, [timeLeft, start, score])
 
     useEffect(() => {
+        const savedProgress = localStorage.getItem(Quiz_Local)
         async function loadQuiz() {
             try {
                 const amount = 10
@@ -38,56 +60,96 @@ export default function QuizPage() {
                 const dificulty = 'easy'
                 const rawQuestion = await FetchQuizQuestion(amount, category, dificulty)
                 setQuestions(formatQuestion(rawQuestion))
+                setStart(true)
             } catch (error) {
                 console.error(error);
             }
         }
 
-        loadQuiz()
+        if (savedProgress) {
+            const data = JSON.parse(savedProgress)
+            setQuestions(data.questions)
+            setQuestionIndex(data.questionIndex)
+            setAnswers(data.answers)
+            setScore(data.score)
+            setTimeLeft(data.timeLeft)
+            setStart(true)
+        } else {
+            loadQuiz()
+        }
     }, [])
 
-    if (!name) {
-        return <Navigate to={'/'} replace />
-    }
+    useEffect(() => {
+        if (!start || !questions.length || finished) return
+
+        const progressData = {
+            name,
+            questions,
+            questionIndex,
+            answers,
+            score,
+            timeLeft
+        }
+
+        localStorage.setItem(
+            Quiz_Local,
+            JSON.stringify(progressData)
+        )
+    }, [questionIndex, answers, score, timeLeft])
+
+
+    useEffect(() => {
+        if (!start) return
+        if (questionIndex < questions.length) return
+        finishQuiz(score)
+    }, [questionIndex])
+
 
     if (!questions.length) {
         return <div className="p-10 text-center">Loading Question ...</div>
     }
     const currentQuestion = questions[questionIndex]
+    const progress = ((questionIndex + 1) / questions.length) * 100
 
-    function answerQuestion(selectedAnswer: any) {
-        setSelectedAnswer(selectedAnswer)
 
-        const isCorrect = selectedAnswer === currentQuestion.correctAnswer
+    function answerQuestion(option: any) {
+
+        setSelectedAnswer(option)
+
+        const isCorrect = option === currentQuestion.correctAnswer
         const finalScore = isCorrect ? score + 1 : score
+
         if (isCorrect) {
-            setScore(finalScore)
+            setScore(prev => prev + 1)
         }
 
         setAnswers(prev => [
             ...prev,
             {
                 questionId: currentQuestion.id,
-                selected: selectedAnswer,
+                selected: option,
                 correct: currentQuestion.correctAnswer
             }
         ])
 
-        if (questionIndex < questions.length - 1) {
-            setQuestionIndex(prev => prev + 1)
-            setSelectedAnswer(null)
-        } else {
-            finishQuiz(finalScore)
+        if (questionIndex === questions.length - 1) {
+            finishQuiz(isCorrect ? score + 1 : score)
+            return
         }
+
+        setQuestionIndex(prev => prev + 1)
     }
 
     function finishQuiz(finalScore) {
+
+        setFinished(true)
+        localStorage.removeItem(Quiz_Local)
         const resultData = {
             name,
             finalScore,
             total: questions.length,
+            answers,
             date: new Date().toISOString()
-
         }
 
         const leaderboard = JSON.parse(localStorage.getItem("quizResults")) || []
@@ -107,7 +169,7 @@ export default function QuizPage() {
         <div className="relative min-h-screen w-full overflow-x-hidden">
             {/* Main */}
             <main className="flex justify-center">
-                <div className="max-w-[1000px] w-full px-4 sm:px-10">
+                <div className="mafx-w-[1000px] w-full px-4 sm:px-10">
                     {/* Progress */}
                     <div className="flex flex-col md:flex-row gap-6 items-center justify-between mb-12">
                         <div className="flex-1 w-full max-w-md bento-card rounded-bento p-6">
@@ -133,7 +195,7 @@ export default function QuizPage() {
                             <div className="relative h-4 w-full bg-slate-100 rounded-full overflow-hidden">
                                 <div
                                     className="absolute h-full bg-gradient-to-r from-primary via-secondary to-accent rounded-full transition-all duration-500"
-                                    style={{ width: "10%" }}
+                                    style={{ width: `${progress}%` }}
                                 />
                             </div>
                         </div>
@@ -142,7 +204,7 @@ export default function QuizPage() {
                         <div className="flex items-center gap-4 bg-white px-8 py-4 rounded-3xl shadow-sm border border-slate-100">
                             <div className="size-14 rounded-full bg-soft-pink/20 flex items-center justify-center border-4 border-white">
                                 <span className="text-soft-pink font-display font-bold text-2xl">
-                                    45
+                                    {timeLeft}
                                 </span>
                             </div>
                             <div>
@@ -184,7 +246,11 @@ export default function QuizPage() {
                     {/* Navigation */}
                     <div className="flex flex-col items-center gap-8 pb-16">
                         <div className="flex items-center gap-4 w-full max-w-lg">
-                            <button className="px-8 py-4 rounded-2xl bg-slate-100 text-slate-500 font-bold hover:bg-slate-200 transition-all active:scale-95 flex items-center gap-2">
+                            <button onClick={() => {
+                                localStorage.removeItem(Quiz_Local)
+                                navigate('/')
+                            }
+                            } className="px-8 py-4 rounded-2xl bg-slate-100 text-slate-500 font-bold hover:bg-slate-200 transition-all active:scale-95 flex items-center gap-2">
                                 <span className="material-symbols-outlined">
                                     arrow_back
                                 </span>

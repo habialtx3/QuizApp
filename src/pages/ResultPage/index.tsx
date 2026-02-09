@@ -7,10 +7,11 @@ import ResultCircle from "./ResultCircle"
 
 export default function ResultPage() {
     const location = useLocation()
-    const finalScore = location.state.finalScore
-    const total = location.state.total
-    const incorrect = total - finalScore
-    const name = location.state.name
+    const { finalScore, total, answers, name } = location.state
+
+    const answered = answers.filter(a => a.selected !== null).length
+    const correct = answers.filter(a => a.selected === a.correct).length
+    const incorrect = answers.filter(a => a.selected !== null && a.selected !== a.correct).length
 
     return (
         <>
@@ -20,7 +21,7 @@ export default function ResultPage() {
                     <ResultHeader />
                     <div className="flex flex-col lg:flex-row items-center gap-14 mb-14">
                         <ResultCircle finalScore={finalScore} total={total} />
-                        <Stats total={total} finalScore={finalScore} incorrect={incorrect} />
+                        <Stats total={total} finalScore={finalScore} incorrect={incorrect} answered={answered} />
                     </div>
                     <ActionButton name={name} />
                 </div>

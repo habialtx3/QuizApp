@@ -1,7 +1,7 @@
 import React from 'react'
 import StatItem from './StatItem'
 
-export default function Stats({ total, finalScore, incorrect }) {
+export default function Stats({ total, finalScore, incorrect, answered }) {
     return (
         <>
             <div className="flex-1 w-full bg-slate-50 rounded-2xl p-6 border-2 border-dashed border-slate-200">
@@ -16,7 +16,7 @@ export default function Stats({ total, finalScore, incorrect }) {
 
                 <div className="grid grid-cols-2 gap-4">
                     <StatItem label="Total Questions" value={total} icon="fact_check" />
-                    <StatItem label="Answered" value={total} icon="edit_square" />
+                    <StatItem label="Answered" value={answered} icon="edit_square" />
                     <StatItem
                         label="Correct"
                         value={finalScore}
