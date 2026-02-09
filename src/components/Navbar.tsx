@@ -26,10 +26,10 @@ export default function Navbar() {
                 <div className="flex items-center gap-4">
                     <div className="hidden md:flex flex-col items-end">
                         <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                            Score
+                            Highest Score
                         </span>
                         <span className="text-lg font-bold text-secondary">
-                            1,250
+                            {localStorage.getItem()}
                         </span>
                     </div>
                     <button className="size-11 rounded-2xl bg-slate-100 text-slate-600 hover:scale-105 active:scale-95 transition-all">

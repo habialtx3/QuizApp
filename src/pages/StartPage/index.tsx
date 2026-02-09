@@ -41,28 +41,7 @@ export default function HomePage() {
                 <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-accent/10 rounded-full blur-[120px]" />
                 <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-secondary/10 rounded-full blur-[120px]" />
             </div>
-            <div className="w-full">
-                <div className="max-w-[1200px] mx-auto px-6 py-6">
-                    <header className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="size-12 flex items-center justify-center bg-primary rounded-2xl shadow-lg shadow-primary/20 transform rotate-3 hover:rotate-0 transition-transform cursor-default">
-                                <span className="material-symbols-outlined text-white text-3xl font-bold">
-                                    rocket_launch
-                                </span>
-                            </div>
-                            <div>
-                                <h2 className="text-2xl font-bold font-display tracking-tight text-slate-800">
-                                    QuizMaster
-                                </h2>
-                                <span className="text-xs font-bold text-secondary tracking-widest uppercase">
-                                    Fun Learning!
-                                </span>
-                            </div>
-                        </div>
 
-                    </header>
-                </div>
-            </div>
             <main className="flex-1 flex items-center justify-center px-4 py-12">
                 <div className="w-full max-w-[500px] flex flex-col items-center">
                     <div className="bento-card w-full rounded-bento p-10 relative overflow-hidden">
@@ -158,9 +137,7 @@ export default function HomePage() {
                     </div>
                 </div>
             </main>
-            <footer className="p-6 text-center text-slate-300 text-xs font-bold uppercase tracking-widest">
-                © 2024 QuizMaster Fun Edition
-            </footer>
+
         </>
 
     )
