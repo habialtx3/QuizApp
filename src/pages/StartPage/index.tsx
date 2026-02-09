@@ -110,7 +110,7 @@ export default function HomePage() {
                             <div className="flex flex-col items-center gap-4">
                                 <button
                                     onClick={handleSubmit}
-                                    className="w-full h-16 bg-accent hover:bg-accent/90 text-white rounded-3xl text-xl font-black font-display tracking-wide shadow-xl shadow-accent/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 group">
+                                    className="w-full h-16 bg-accent hover:bg-accent/90 text-white cursor-pointer rounded-3xl text-xl font-black font-display tracking-wide shadow-xl shadow-accent/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 group">
                                     LET'S GO!
                                     <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
                                         arrow_forward_ios
@@ -129,7 +129,7 @@ export default function HomePage() {
                         <div className="mt-10 pt-8 border-t-2 border-dashed border-slate-100 text-center">
                             <div className="flex items-center justify-center gap-2 text-slate-400 text-sm">
                                 <span className="material-symbols-outlined text-base">save</span>
-                                <p>Your score is saved on this computer!</p>
+                                <p>Your score is saved on this device locally!</p>
                             </div>
                         </div>
                     </div>
