@@ -1,14 +1,21 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export default function ActionButton(name: String) {
+export default function ActionButton({ name }: { name: String }) {
     const navigate = useNavigate()
 
     function restartQuiz() {
         localStorage.removeItem("QUIZ-PROGRESS")
-        navigate('/quiz', {
-            state: { name }
-        })
+
+        const changeName = window.confirm("Do you want to change name ?")
+
+        if (changeName) {
+            navigate('/')
+        } else {
+            navigate('/quiz', {
+                state: { name }
+            })
+        }
     }
 
     function goToDashboard() {
