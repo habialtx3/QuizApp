@@ -16,7 +16,7 @@ export default function HomePage() {
 
     return (
         <>
-            <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+            {/* <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
                 <span
                     className="material-symbols-outlined absolute top-20 left-[10%] text-accent/20 text-7xl floating-icon"
                     style={{ animationDelay: "0.5s" }}
@@ -40,7 +40,7 @@ export default function HomePage() {
                 </span>
                 <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-accent/10 rounded-full blur-[120px]" />
                 <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-secondary/10 rounded-full blur-[120px]" />
-            </div>
+            </div> */}
 
             <main className="flex-1 flex items-center justify-center px-4 py-12">
                 <div className="w-full max-w-[500px] flex flex-col items-center">
