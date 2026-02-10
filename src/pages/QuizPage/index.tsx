@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Navigate, useLocation, useNavigate } from "react-router-dom"
 import { FetchQuizQuestion } from "../../services/quizService"
 import { formatQuestion } from "../../utils/formatQuestion"

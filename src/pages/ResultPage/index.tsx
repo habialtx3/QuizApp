@@ -1,4 +1,3 @@
-import React from "react"
 import { useLocation } from "react-router-dom"
 import ResultHeader from "./ResultHeader"
 import Stats from "./Stats"

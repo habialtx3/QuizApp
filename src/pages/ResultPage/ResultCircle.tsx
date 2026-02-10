@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function ResultCircle({ finalScore, total }) {
     const comparisonChart = Math.round((finalScore / total) * 100)
 
