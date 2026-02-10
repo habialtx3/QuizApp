@@ -22,7 +22,7 @@ export default function QuizPage() {
     const [answers, setAnswers] = useState([])
     const [score, setScore] = useState(0)
     const [start, setStart] = useState(false)
-    const [timeLeft, setTimeLeft] = useState(20)
+    const [timeLeft, setTimeLeft] = useState(30)
     const [finished, setFinished] = useState(false)
 
 
