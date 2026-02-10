@@ -130,17 +130,30 @@ export default function QuizPage() {
     const progress = ((questionIndex + 1) / questions.length) * 100
 
 
-    function answerQuestion(option: string) {
+    function answerQuestion(
+        option: string,
+        currentQuestion: Question,
+        selectedAnswer: string | null,
+        setSelectedAnswer: React.Dispatch<React.SetStateAction<string | null>>,
+        score: number,
+        setScore: React.Dispatch<React.SetStateAction<number>>,
+        answers: AnswerData[],
+        setAnswers: React.Dispatch<React.SetStateAction<AnswerData[]>>,
+        questionIndex: number,
+        setQuestionIndex: React.Dispatch<React.SetStateAction<number>>,
+        finishQuiz: (finalScore: number) => void
+
+    ) {
         if (!option) return
         setSelectedAnswer(option)
 
         const isCorrect = option === currentQuestion.correctAnswer
 
         if (isCorrect) {
-            setScore(prev => prev + 1)
+            setScore((prev: number) => prev + 1)
         }
 
-        setAnswers(prev => [
+        setAnswers((prev: AnswerData[]) => [
             ...prev,
             {
                 questionId: currentQuestion.id,
@@ -154,7 +167,7 @@ export default function QuizPage() {
             return
         }
 
-        setQuestionIndex(prev => prev + 1)
+        setQuestionIndex((prev: number) => prev + 1)
     }
 
     function finishQuiz(finalScore: number) {
@@ -230,3 +243,8 @@ export default function QuizPage() {
     )
 }
 
+interface AnswerProps {
+    label: string
+    selected: boolean
+    onClick: () => void
+}

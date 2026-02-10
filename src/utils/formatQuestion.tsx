@@ -1,5 +1,5 @@
 export function formatQuestion(apiResponse: any) {
-    return apiResponse.map((q, index) => {
+    return apiResponse.map((q: any, index: number) => {
         const options = [...q.incorrect_answers, q.correct_answer]
 
         const shuffleOptions = options.sort(() => Math.random() - 0.5)
