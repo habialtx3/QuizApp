@@ -6,10 +6,9 @@ import ResultCircle from "./ResultCircle"
 
 export default function ResultPage() {
     const location = useLocation()
-    const { finalScore, total, answers, name } = location.state
+    const { finalScore, total, answers, name } = location.state as ResultState
 
     const answered = answers.filter(a => a.selected !== null).length
-    const correct = answers.filter(a => a.selected === a.correct).length
     const incorrect = answers.filter(a => a.selected !== null && a.selected !== a.correct).length
 
     return (
@@ -27,4 +26,17 @@ export default function ResultPage() {
             </main>
         </>
     )
+}
+
+interface AnswerData {
+    questionId: number
+    selected: string | null
+    correct: string
+}
+
+interface ResultState {
+    finalScore: number
+    total: number
+    answers: AnswerData[]
+    name: string
 }

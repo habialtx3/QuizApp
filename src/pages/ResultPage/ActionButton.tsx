@@ -1,7 +1,6 @@
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export default function ActionButton({ name }: { name: String }) {
+export default function ActionButton({ name }: nameProps) {
     const navigate = useNavigate()
 
     function restartQuiz() {
@@ -40,4 +39,8 @@ export default function ActionButton({ name }: { name: String }) {
             </button>
         </div>
     )
+}
+
+interface nameProps {
+    name: string
 }

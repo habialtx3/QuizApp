@@ -4,7 +4,7 @@ export default function ProgressSection({
     total,
     progress,
     timeLeft
-}) {
+}: ProgressSectionProps) {
     return (
         <div className="flex flex-col md:flex-row gap-6 items-center justify-between mb-12">
             <div className="flex-1 w-full max-w-md bento-card rounded-bento p-6">
@@ -36,4 +36,11 @@ export default function ProgressSection({
             </div>
         </div>
     )
+}
+interface ProgressSectionProps {
+    name: string
+    questionIndex: number
+    total: number
+    progress: number
+    timeLeft: number
 }

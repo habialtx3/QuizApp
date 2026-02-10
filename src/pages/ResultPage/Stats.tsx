@@ -1,7 +1,6 @@
-import React from 'react'
 import StatItem from './StatItem'
 
-export default function Stats({ total, finalScore, incorrect, answered }) {
+export default function Stats({ total, finalScore, incorrect, answered }: StatsProps) {
     return (
         <>
             <div className="flex-1 w-full bg-slate-50 rounded-2xl p-6 border-2 border-dashed border-slate-200">
@@ -33,4 +32,11 @@ export default function Stats({ total, finalScore, incorrect, answered }) {
             </div>
         </>
     )
+}
+
+interface StatsProps {
+    total: number,
+    finalScore: number,
+    incorrect: number,
+    answered: number
 }

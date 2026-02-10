@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
-import { Navigate, useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { FetchQuizQuestion } from "../../services/quizService"
 import { formatQuestion } from "../../utils/formatQuestion"
 import ProgressSection from "./ProgressSection"
 import QuestionSection from "./QuestionSection"
 import AnswerSection from "./AnswerSection"
-import ActionButton from "./ActionButton"
 
 export default function QuizPage() {
+
     const location = useLocation()
 
     const navigate = useNavigate()
@@ -17,9 +17,23 @@ export default function QuizPage() {
     const name = location.state?.name || parsedProgress?.name
 
     const [questionIndex, setQuestionIndex] = useState(0)
-    const [questions, setQuestions] = useState([])
-    const [selectedAnswer, setSelectedAnswer] = useState(null)
-    const [answers, setAnswers] = useState([])
+    interface Question {
+        id: number
+        question: string
+        options: string[]
+        correctAnswer: string
+    }
+
+    interface AnswerData {
+        questionId: number
+        selected: string | null
+        correct: string
+    }
+
+    const [questions, setQuestions] = useState<Question[]>([])
+    const [answers, setAnswers] = useState<AnswerData[]>([])
+    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
+
     const [score, setScore] = useState(0)
     const [start, setStart] = useState(false)
     const [timeLeft, setTimeLeft] = useState(30)
@@ -116,12 +130,11 @@ export default function QuizPage() {
     const progress = ((questionIndex + 1) / questions.length) * 100
 
 
-    function answerQuestion(option: any) {
-
+    function answerQuestion(option: string) {
+        if (!option) return
         setSelectedAnswer(option)
 
         const isCorrect = option === currentQuestion.correctAnswer
-        const finalScore = isCorrect ? score + 1 : score
 
         if (isCorrect) {
             setScore(prev => prev + 1)
@@ -144,7 +157,7 @@ export default function QuizPage() {
         setQuestionIndex(prev => prev + 1)
     }
 
-    function finishQuiz(finalScore) {
+    function finishQuiz(finalScore: number) {
 
         setFinished(true)
         localStorage.removeItem(Quiz_Local)
@@ -156,7 +169,8 @@ export default function QuizPage() {
             date: new Date().toISOString()
         }
 
-        const leaderboard = JSON.parse(localStorage.getItem("quizResults")) || []
+        const storedLeaderboard = localStorage.getItem("quizResults");
+        const leaderboard = storedLeaderboard ? JSON.parse(storedLeaderboard) : [];
 
         localStorage.setItem(
             "quizResults",
@@ -186,11 +200,12 @@ export default function QuizPage() {
                     {/* Question */}
                     <QuestionSection question={currentQuestion.question} />
 
+
                     {/* Answers */}
                     <AnswerSection
-                        options={currentQuestion.options}
+                        options={currentQuestion?.options ?? []}
                         selectedAnswer={selectedAnswer}
-                        onAnswer={answerQuestion}
+                        onAnswer={(option: string) => option && answerQuestion(option)}
                     />
 
 
@@ -214,3 +229,4 @@ export default function QuizPage() {
         </div>
     )
 }
+

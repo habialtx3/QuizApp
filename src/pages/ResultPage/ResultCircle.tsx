@@ -1,4 +1,4 @@
-export default function ResultCircle({ finalScore, total }) {
+export default function ResultCircle({ finalScore, total }: ResultCircleProps) {
     const comparisonChart = Math.round((finalScore / total) * 100)
 
     const radius = 90
@@ -65,4 +65,9 @@ export default function ResultCircle({ finalScore, total }) {
             </div>
         </>
     )
+}
+
+interface ResultCircleProps {
+    finalScore: number;
+    total: number;
 }

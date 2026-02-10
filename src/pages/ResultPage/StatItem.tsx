@@ -1,6 +1,4 @@
-import React from 'react'
-
-export default function StatItem({ label, value, icon, accent = "accent" }) {
+export default function StatItem({ label, value, icon, accent = "accent" }: StatItemProps) {
     return (
         <div className={`bg-white p-4 rounded-xl shadow-sm border border-slate-100`}>
             <p className="text-slate-400 text-xs font-bold uppercase mb-1">
@@ -18,3 +16,9 @@ export default function StatItem({ label, value, icon, accent = "accent" }) {
     )
 }
 
+interface StatItemProps {
+    label: string;
+    value: number | string;
+    icon: string;
+    accent?: string; // optional, default nanti "accent"
+}
