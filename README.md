@@ -1,73 +1,95 @@
-# React + TypeScript + Vite
+# React Quiz App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A **React-based quiz application** that consumes questions from the **Open Trivia Database (OpenTDB API)**.  
+This project was built as a **personal project / technical test** to demonstrate frontend development skills using React.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## React Compiler
+- 🔐 Simple login using usernmae feature
+- 📡 Quiz questions fetched from **OpenTDB API**
+- ❓ Dynamic question types and total number of questions
+- 📊 Display total questions and answered questions
+- ⏱️ Countdown timer for quiz session
+- 👉 One question per page
+- ⚡ Automatically moves to the next question after selecting an answer
+- ⛔ Automatically ends the quiz when the timer runs out
+- 📈 Result summary:
+  - Total correct answers
+  - Total wrong answers
+  - Total answered questions
+- 💾 Quiz progress persistence using **LocalStorage** (resume quiz after browser close)
+- 🌐 Responsive user interface
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React**
+- **React Router DOM**
+- **JavaScript (ES6+)**
+- **OpenTDB API**
+- **LocalStorage**
+- **CSS / Tailwind CSS (based on implementation)**
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## ⚙️ Getting Started
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/habialtx3/QuizApp.git
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Navigate to the project directory
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd react-quiz-app
 ```
+
+### 3. Install dependencies
+
+```bash
+npm install
+```
+
+### 4. Run the application
+
+```bash
+npm run dev
+# or
+npm start
+```
+
+### 5. Open in browser
+
+```
+http://localhost:5173
+```
+
+---
+
+## 📌 Notes
+
+- Quiz state (answers, score, and timer) is stored in **LocalStorage** to support quiz resume functionality
+- Questions are fetched dynamically from **OpenTDB API**
+- This project is intended for **learning and portfolio purposes**
+
+---
+
+## 👤 Author
+
+**Muhammad Reza Pahlevi**  
+Junior Software / Web Developer
+
+- GitHub: https://github.com/habialtx3
+- LinkedIn: https://linkedin.com/in/fhrezap
+
+---
+
+## ⭐ Acknowledgment
+
+If you find this project helpful, feel free to give it a ⭐ on GitHub.  
+Thank you for checking it out 🙌
