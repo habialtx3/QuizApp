@@ -35,7 +35,7 @@ function Answer({ label, selected, onClick }: AnswerProps) {
     return (
         <button
             className={`flex flex-col gap-4 p-5 rounded-3xl border-4 transition-all group 
-            ${selected ? "" : "border-slate-300 hover:border-secondary hover:shadow-lg"} 
+            ${selected ? "border-slate-300" : "border-slate-300 hover:border-secondary hover:shadow-lg"} 
             bg-white`}
             onClick={onClick}
         >

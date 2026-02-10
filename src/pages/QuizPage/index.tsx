@@ -132,17 +132,6 @@ export default function QuizPage() {
 
     function answerQuestion(
         option: string,
-        currentQuestion: Question,
-        selectedAnswer: string | null,
-        setSelectedAnswer: React.Dispatch<React.SetStateAction<string | null>>,
-        score: number,
-        setScore: React.Dispatch<React.SetStateAction<number>>,
-        answers: AnswerData[],
-        setAnswers: React.Dispatch<React.SetStateAction<AnswerData[]>>,
-        questionIndex: number,
-        setQuestionIndex: React.Dispatch<React.SetStateAction<number>>,
-        finishQuiz: (finalScore: number) => void
-
     ) {
         if (!option) return
         setSelectedAnswer(option)
