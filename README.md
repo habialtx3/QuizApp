@@ -71,6 +71,48 @@ http://localhost:5173
 
 ---
 
+## ⚙️ Customizing Quiz Questions
+
+The quiz questions are fetched using the function `FetchQuizQuestion` in **quizService.ts**:
+
+```ts
+export async function FetchQuizQuestion(
+  amount = 10,
+  category = 19,
+  difficulty = "easy",
+) {
+  const res = await fetch(
+    `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}`,
+  );
+
+  const data = await res.json();
+
+  if (!data.results || data.results.length === 0) {
+    throw new Error("No Question returned from API");
+  }
+
+  return data.results;
+}
+```
+
+### Parameters
+
+- **amount**: Number of questions to fetch (default: `10`)
+- **category**: Category of the questions (default: `19`, e.g., Science: Computers)
+- **difficulty**: Difficulty level (`easy`, `medium`, `hard`; default: `easy`)
+
+You can customize the quiz by changing these parameters when calling `FetchQuizQuestion`.  
+For example:
+
+```ts
+// Fetch 15 medium-difficulty Science questions
+const questions = await FetchQuizQuestion(15, 19, "medium");
+```
+
+This allows the app to dynamically adjust the type, number, and difficulty of the quiz questions.
+
+---
+
 ## 📌 Notes
 
 - Quiz state (answers, score, and timer) is stored in **LocalStorage** to support quiz resume functionality
