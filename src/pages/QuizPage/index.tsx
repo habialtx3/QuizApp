@@ -231,9 +231,3 @@ export default function QuizPage() {
         </div>
     )
 }
-
-interface AnswerProps {
-    label: string
-    selected: boolean
-    onClick: () => void
-}
