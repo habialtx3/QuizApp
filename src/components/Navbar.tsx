@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function Navbar() {
+
     return (
         <>
 
@@ -24,14 +25,6 @@ export default function Navbar() {
                 </Link>
 
                 <div className="flex items-center gap-4">
-                    <div className="hidden md:flex flex-col items-end">
-                        <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                            Score
-                        </span>
-                        <span className="text-lg font-bold text-secondary">
-                            1,250
-                        </span>
-                    </div>
                     <button className="size-11 rounded-2xl bg-slate-100 text-slate-600 hover:scale-105 active:scale-95 transition-all">
                         <span className="material-symbols-outlined">person</span>
                     </button>
